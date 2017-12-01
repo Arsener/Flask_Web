@@ -76,6 +76,14 @@ def write_post():
     return render_template('write_post.html', form=form)
 
 
+@main.route('/delete/<int:id>')
+@login_required
+def delete_post(id):
+    post = Post.query.get_or_404(id)
+    db.session.delete(post)
+    return redirect(url_for('.user', name = current_user.name))
+
+
 def get_posts_in_one_page(source):
     page = request.args.get('page', 1, type=int)
     pagination = source.order_by(Post.id.desc()).paginate(

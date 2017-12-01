@@ -24,10 +24,28 @@
     </div>
 </div>
 <div class="posts" style="float: left">
-    {% include '_posts.html' %}
-<div class="pagination">
-    {{ macros.pagination_widget(pagination, '.user', name=user.name) }}
-</div>
+    {% for post in posts %}
+        <div class="post-thumbnail" style="float: left">
+            <a href="{{ url_for('.user', name=post.author.name) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=40) }}">
+            </a>
+        </div>
+        <div class="post-content">
+            <div class="post-footer">
+                <h4><a href="{{ url_for('.post', id=post.id) }}">{{ post.title}}</a></h4>
+            </div>
+            <div class="post-author">Author:<a href="{{ url_for('.user', name=post.author.name) }}">{{ post.author.name }}</a></div>
+            <div class="post-author">
+                {% if user.name == current_user.name %}
+                    <a href="{{ url_for('.delete_post', id=post.id) }}">delete</a>
+                {% endif %}
+            </div>
+        </div>
+        <br />
+    {% endfor %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, '.user', name=user.name) }}
+    </div>
 </div>
 
 {% endblock %}
