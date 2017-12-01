@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Flasky - {{ user.name }}{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}" style="float: left">
+    <div class="profile-header">
+        <h1>{{ user.name }}</h1>
+        {% if user.real_name or user.location %}
+        <p><strong>Basic Information</strong>:
+            {% if user.real_name %}{{ user.real_name }}{% endif %}
+            {% if user.location %}
+                From <a href="http://maps.google.com/?q={{ user.location }}">{{ user.location }}</a>
+            {% endif %}
+        </p>
+        {% endif %}
+        {% if user.school %}<p><strong>School</strong>:{{ user.school }}</p>{% endif %}
+        {% if user.about_me %}<p><strong>About Me</strong>:{{ user.about_me }}</p>{% endif %}
+        {% if user.name == current_user.name %}
+            <a href="{{ url_for('.edit_profile')}}">Update my profile.</a>
+        {% endif %}
+    </div>
+</div>
+<div class="posts" style="float: left">
+    {% include '_posts.html' %}
+</div>
+
+{% endblock %}
