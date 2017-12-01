@@ -57,40 +57,14 @@ def edit_profile():
 
     return render_template('edit_profile.html', form=form)
 
+@main.route('/post/<int:id>')
+def post(id):
+    post = Post.query.get_or_404(id)
+    return render_template('post.html', posts=[post])
+
 def get_posts_in_one_page(source):
     page = request.args.get('page', 1, type=int)
     pagination = source.order_by(Post.id.desc()).paginate(
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
     return posts, pagination
-
-
-# from flask import render_template, redirect, url_for, flash
-#
-# from app.auth.forms import NameForm
-# from . import main
-# from .. import db
-# from ..email import send_email
-# from ..models import User
-#
-#
-# @main.route('/', methods=['GET', 'POST'])
-# def index():
-#     form = NameForm()
-#     if form.validate_on_submit():
-#         user_finded_by_name = User.query.filter_by(name=form.name.data).first()
-#         user_finded_by_email = User.query.filter_by(email=form.email.data).first()
-#         if user_finded_by_name is None and user_finded_by_email is None:
-#             name = form.name.data
-#             # password = form.name.data
-#             email = form.email.data
-#             user = User(name = name, email = email)
-#             db.session.add(user)
-#             send_email(email, name)
-#             return redirect(url_for('.welcome', name = name))
-#         elif user_finded_by_name is not None:
-#             flash('This name has already been used.')
-#         elif user_finded_by_email is not None:
-#             flash('This email has already been registed.')
-#         return redirect(url_for('.index'))
-#     return render_template('index.html', form = form)
