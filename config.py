@@ -14,6 +14,7 @@ class Config:
     MAIL_PASSWORD = 'vhvynhabpnioeigf'
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
     FLASKY_MAIL_SENDER = 'minghui_gong@qq.com'
+    FLASKY_POSTS_PER_PAGE = 10
     # FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 
     @staticmethod

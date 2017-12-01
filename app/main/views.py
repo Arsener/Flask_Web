@@ -1,5 +1,5 @@
-from flask import render_template, redirect, url_for, flash
-from flask_login import current_user, login_required
+from flask import render_template, redirect, url_for, flash, request
+from flask_login import current_user, login_required, current_app
 from . import main
 from .forms import PostForm, EditProfileForm
 from .. import db
@@ -14,14 +14,22 @@ def index():
                     author=current_user._get_current_object())
         db.session.add(post)
         return redirect(url_for('.index'))
-    posts = Post.query.order_by(Post.id.desc()).all()
-    return render_template('index.html', form=form, posts=posts)
+    # page = request.args.get('page', 1, type=int)
+    # pagination = Post.query.order_by(Post.id.desc()).paginate(
+    #     page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
+    # posts = pagination.items
+    posts, pagination = get_posts_in_one_page(Post.query)
+    return render_template('index.html', form=form, posts=posts, pagination=pagination)
 
 @main.route('/user/<name>')
 def user(name):
     user = User.query.filter_by(name=name).first_or_404()
-    posts = user.posts.order_by(Post.id.desc()).all()
-    return render_template('user.html', user=user, posts = posts)
+    # page = request.args.get('page', 1, type=int)
+    # pagination = Post.query.order_by(Post.id.desc()).paginate(
+    #     page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
+    # posts = pagination.items
+    posts, pagination = get_posts_in_one_page(user.posts)
+    return render_template('user.html', user=user, posts = posts, pagination=pagination)
 
 
 @main.route('/welcome/<name>')
@@ -49,7 +57,12 @@ def edit_profile():
 
     return render_template('edit_profile.html', form=form)
 
-
+def get_posts_in_one_page(source):
+    page = request.args.get('page', 1, type=int)
+    pagination = source.order_by(Post.id.desc()).paginate(
+        page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
+    posts = pagination.items
+    return posts, pagination
 
 
 # from flask import render_template, redirect, url_for, flash
