@@ -25,6 +25,7 @@
                 <li><a href="{{ url_for('main.index') }}">Home</a></li>
                 {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('main.user', name=current_user.name) }}">Profile</a></li>
+                <li><a href="{{ url_for('main.write_post') }}">Write a Blog</a></li>
                 {% endif %}
             </ul>
             <ul class="nav navbar-nav navbar-right">

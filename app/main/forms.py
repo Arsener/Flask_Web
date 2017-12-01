@@ -10,6 +10,7 @@ class NameForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
+    title = StringField('Title', validators=[Required()])
     body = PageDownField("What's on your mind?", validators=[Required()])
     submit = SubmitField('Submit')
 

@@ -8,18 +8,18 @@ from ..models import Post, User
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    form = PostForm()
-    if form.validate_on_submit():
-        post = Post(body=form.body.data,
-                    author=current_user._get_current_object())
-        db.session.add(post)
-        return redirect(url_for('.index'))
+    # form = PostForm()
+    # if form.validate_on_submit():
+    #     post = Post(body=form.body.data,
+    #                 author=current_user._get_current_object())
+    #     db.session.add(post)
+    #     return redirect(url_for('.index'))
     # page = request.args.get('page', 1, type=int)
     # pagination = Post.query.order_by(Post.id.desc()).paginate(
     #     page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     # posts = pagination.items
     posts, pagination = get_posts_in_one_page(Post.query)
-    return render_template('index.html', form=form, posts=posts, pagination=pagination)
+    return render_template('index.html', posts=posts, pagination=pagination)
 
 @main.route('/user/<name>')
 def user(name):
@@ -57,10 +57,24 @@ def edit_profile():
 
     return render_template('edit_profile.html', form=form)
 
+
 @main.route('/post/<int:id>')
 def post(id):
     post = Post.query.get_or_404(id)
     return render_template('post.html', posts=[post])
+
+
+@main.route('/write-post', methods=['GET', 'POST'])
+@login_required
+def write_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(title = form.title.data, body=form.body.data,
+                    author=current_user._get_current_object())
+        db.session.add(post)
+        return redirect(url_for('.index'))
+    return render_template('write_post.html', form=form)
+
 
 def get_posts_in_one_page(source):
     page = request.args.get('page', 1, type=int)
