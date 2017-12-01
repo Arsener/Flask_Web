@@ -25,14 +25,9 @@
 </div>
 <div class="posts" style="float: left">
     {% for post in posts %}
-        <div class="post-thumbnail" style="float: left">
-            <a href="{{ url_for('.user', name=post.author.name) }}">
-                <img class="img-rounded profile-thumbnail" src="{{ post.author.gravatar(size=40) }}">
-            </a>
-        </div>
         <div class="post-content">
             <div class="post-footer">
-                <h4><a href="{{ url_for('.post', id=post.id) }}">{{ post.title}}</a></h4>
+                <h4>Blog:<a href="{{ url_for('.post', id=post.id) }}">{{ post.title}}</a></h4>
             </div>
             <div class="post-author">Author:<a href="{{ url_for('.user', name=post.author.name) }}">{{ post.author.name }}</a></div>
             <div class="post-author">

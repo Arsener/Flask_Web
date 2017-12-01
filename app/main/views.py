@@ -81,6 +81,7 @@ def write_post():
 def delete_post(id):
     post = Post.query.get_or_404(id)
     db.session.delete(post)
+    flash('Your blog has been deleted.')
     return redirect(url_for('.user', name = current_user.name))
 
 
