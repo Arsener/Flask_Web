@@ -8,7 +8,13 @@
         </div>
         <div class="post-content">
             <div class="post-author"><a href="{{ url_for('.user', name=post.author.name) }}">{{ post.author.name }}</a></div>
-            <div class="post-body">{{ post.body }}</div>
+            <div class="post-body">
+                {% if post.body_html %}
+                    {{ post.body_html | safe }}
+                {% else %}
+                    {{ post.body }}
+                {% endif %}
+            </div>
         </div>
         <br />
     </li>
