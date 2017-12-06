@@ -8,26 +8,12 @@ from ..models import Post, User
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    # form = PostForm()
-    # if form.validate_on_submit():
-    #     post = Post(body=form.body.data,
-    #                 author=current_user._get_current_object())
-    #     db.session.add(post)
-    #     return redirect(url_for('.index'))
-    # page = request.args.get('page', 1, type=int)
-    # pagination = Post.query.order_by(Post.id.desc()).paginate(
-    #     page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
-    # posts = pagination.items
     posts, pagination = get_posts_in_one_page(Post.query)
     return render_template('index.html', posts=posts, pagination=pagination)
 
 @main.route('/user/<name>')
 def user(name):
     user = User.query.filter_by(name=name).first_or_404()
-    # page = request.args.get('page', 1, type=int)
-    # pagination = Post.query.order_by(Post.id.desc()).paginate(
-    #     page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
-    # posts = pagination.items
     posts, pagination = get_posts_in_one_page(user.posts)
     return render_template('user.html', user=user, posts = posts, pagination=pagination)
 
