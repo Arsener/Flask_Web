@@ -1,10 +1,11 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 from . import auth
 from .. import db
 from ..models import User
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm
 from ..email import send_email
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 @auth.before_app_request
 def before_request():
@@ -52,16 +53,17 @@ def register():
         send_email(user.email, 'Confirm Your Account',
                    'auth/email/confirm', user=user, token=token)
         flash('A confirmation email has been sent to you by email.')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
-@auth.route('/confirm/<token>')
-@login_required
-def confirm(token):
-    if current_user.confirmed:
+@auth.route('/confirm/<id>/<token>')
+def confirm(token, id):
+    user = User.query.filter_by(id=id).first()
+    if user.confirmed:
         return redirect(url_for('main.index'))
-    if current_user.confirm(token):
+    if user.confirm(token):
         flash('You have confirmed your account. Thanks!')
+        return render_template('auth/confirmed.html')
     else:
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('main.index'))

@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
             self.avatar_hash = hashlib.md5(self.email.encode('utf-8')).hexdigest()
 
     def __repr__(self):
-        return '<User %r>' % self.name
+        return 'user'
 
     @property
     def password(self):

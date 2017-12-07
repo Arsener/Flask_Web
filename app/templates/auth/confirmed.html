@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Flask Blogs - Confirm your account{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>
+        Hello, {{ current_user.name }}!
+    </h1>
+    <h3>You have confirmed your account successfully!</h3>
+    <p>
+        Now you can login and write down what you are thinking about!
+    </p>
+    <p>
+        <a href="{{ url_for('auth.login') }}">Click here to login.</a>
+    </p>
+</div>
+{% endblock %}
