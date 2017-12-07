@@ -1,0 +1,24 @@
+<ul class="comments">
+    {% for comment in comments %}
+        <br />
+        <div class="comment-thumbnail" style="float: left">
+            <a href="{{ url_for('.user', name=comment.author.name) }}">
+                <img class="img-rounded profile-thumbnail" src="{{ comment.author.gravatar(size=40) }}">
+            </a>
+        </div>
+        <div class="comment-content">
+            <div class="comment-date" style="float: right">{{ moment(comment.timestamp).fromNow() }}</div>
+            <div class="comment-author">
+                <a href="{{ url_for('.user', name=comment.author.name) }}">{{ comment.author.name }}</a>
+            </div>
+            <div class="comment-body">
+                {% if comment.body_html %}
+                    {{ comment.body_html | safe }}
+                {% else %}
+                    {{ comment.body }}
+                {% endif %}
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+</ul>

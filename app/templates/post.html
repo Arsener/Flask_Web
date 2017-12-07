@@ -1,12 +1,20 @@
 {% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Flask Blogs - Post{% endblock %}
 
 {% block page_content %}
     <h1 style="text-align: center">{{ post.title }}</h1>
     <div class="post-author" style="text-align: center">
-        <a href="{{ url_for('.user', name=post.author.name) }}">{{ post.author.name }}</a>
+        <span>
+            <b>Author:</b>
+            <a href="{{ url_for('.user', name=post.author.name) }}">{{ post.author.name }}</a>
+            <b>Time:</b>
+            {{ moment(post.timestamp).fromNow(refresh=True) }}
+        </span>
     </div>
+    <hr>
     <div class="post-body">
         {% if post.body_html %}
             {{ post.body_html | safe }}
@@ -14,4 +22,15 @@
             {{ post.body }}
         {% endif %}
     </div>
+    <hr>
+    <h4 id="comments">Comments</h4>
+    <div class="comment-form">
+        {{ wtf.quick_form(form) }}
+    </div>
+    {% include '_comments.html' %}
+    {% if pagination %}
+    <div class="pagination">
+        {{ macros.pagination_widget(pagination, '.post', fragment='#comments', id=post.id) }}
+    </div>
+    {% endif %}
 {% endblock %}

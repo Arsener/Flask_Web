@@ -25,6 +25,7 @@
 </div>
 <div class="posts" style="position:static;float:none;clear:both;">
     {% for post in posts %}
+        <br />
         <div class="post-content">
             <div class="post-footer">
                 <span>
@@ -44,12 +45,15 @@
                     {% if user.name == current_user.name %}
                         <a href="{{ url_for('.delete_post', id=post.id) }}">Delete</a>
                         <a href="{{ url_for('.edit_post', id=post.id) }}">Edit</a>
+                        <a href="{{ url_for('.post', id=post.id) }}#comments">
+                            <span class="label label-primary">{{ post.comments.count() }} Comments</span>
+                        </a>
                     {% endif %}
                 </span>
             </div>
 
         </div>
-        <br />
+        <hr>
     {% endfor %}
     <div class="pagination">
         {{ macros.pagination_widget(pagination, '.user', name=user.name) }}
