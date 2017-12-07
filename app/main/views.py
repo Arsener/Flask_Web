@@ -63,8 +63,8 @@ def post(id):
         page, per_page=current_app.config['FLASKY_COMMENTS_PER_PAGE'],
         error_out=False)
     comments = pagination.items
-    return render_template('post.html', post=post, form=form,
-                           comments=comments, pagination=pagination)
+    return render_template('post.html', post=post, form=form, post_author=User.query.filter_by(id=post.author_id).first(),
+                        comments=comments, pagination=pagination, User=User)
 
 
 @main.route('/write-post', methods=['GET', 'POST'])
@@ -89,7 +89,7 @@ def delete_post(id):
     post = Post.query.get_or_404(id)
     db.session.delete(post)
     flash('Your blog has been deleted.')
-    return redirect(url_for('.user', name = current_user.name))
+    return redirect(url_for('.user', name=current_user.name))
 
 
 @main.route('/edit-post/<int:id>', methods=['GET', 'POST'])
@@ -114,6 +114,15 @@ def edit_post(id):
 
     return render_template('edit_post.html', form=form)
 
+
+@main.route('/delete-comment/<int:id>')
+@login_required
+def delete_comment(id):
+    comment = Comment.query.get_or_404(id)
+    post = Post.query.filter_by(id=Comment.post_id).first()
+    db.session.delete(comment)
+    flash('The comment has been deleted.')
+    return redirect(url_for('.post', id=post.id))
 
 
 def get_posts_in_one_page(source):

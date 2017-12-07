@@ -12,11 +12,18 @@
                 <a href="{{ url_for('.user', name=comment.author.name) }}">{{ comment.author.name }}</a>
             </div>
             <div class="comment-body">
+                <span>
                 {% if comment.body_html %}
                     {{ comment.body_html | safe }}
                 {% else %}
                     {{ comment.body }}
                 {% endif %}
+                </span>
+                <span style="float: right">
+                {% if current_user.name == post_author.name or current_user.name == User.query.filter_by(id=comment.author_id).first().name %}
+                    <a href="{{ url_for('.delete_comment', id=comment.id) }}">Delete</a>
+                {% endif %}
+                </span>
             </div>
         </div>
         <hr>

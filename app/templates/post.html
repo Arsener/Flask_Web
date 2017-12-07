@@ -24,6 +24,9 @@
     </div>
     <hr>
     <h4 id="comments">Comments</h4>
+    <span style="float: right">
+        {{ post.comments.count() }} Comments
+    </span>
     <div class="comment-form">
         {{ wtf.quick_form(form) }}
     </div>
