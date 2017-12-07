@@ -1,10 +1,8 @@
 {% extends "base.html" %}
-{% import "_macros.html" as macros %}
 
 {% block title %}Flask Blogs - Post{% endblock %}
 
 {% block page_content %}
-    {% for post in posts %}
     <center>
         <h1>{{ post.title }}</h1>
         <div class="post-author"><a href="{{ url_for('.user', name=post.author.name) }}">{{ post.author.name }}</a></div>
@@ -16,5 +14,4 @@
             {{ post.body }}
         {% endif %}
     </div>
-    {% endfor %}
 {% endblock %}

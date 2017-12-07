@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash, request, abort
 from flask_login import current_user, login_required, current_app
 from . import main
 from .forms import PostForm, EditProfileForm
@@ -47,7 +47,7 @@ def edit_profile():
 @main.route('/post/<int:id>')
 def post(id):
     post = Post.query.get_or_404(id)
-    return render_template('post.html', posts=[post])
+    return render_template('post.html', post=post)
 
 
 @main.route('/write-post', methods=['GET', 'POST'])
@@ -55,7 +55,7 @@ def post(id):
 def write_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title = form.title.data, body=form.body.data,
+        post = Post(title = form.title.data, body=form.body.data.replace('\n', '<br />'),
                     author=current_user._get_current_object())
         db.session.add(post)
         return redirect(url_for('.index'))
@@ -69,6 +69,27 @@ def delete_post(id):
     db.session.delete(post)
     flash('Your blog has been deleted.')
     return redirect(url_for('.user', name = current_user.name))
+
+
+@main.route('/edit-post/<int:id>', methods=['GET', 'POST'])
+@login_required
+def edit_post(id):
+    post = Post.query.get_or_404(id)
+    if current_user.id != post.author_id:
+        abort(403)
+    form = PostForm()
+
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.body = form.body.data
+        flash('The post has been updated.')
+        return redirect(url_for('.post', id=post.id))
+
+    form.title.data = post.title
+    form.body.data = post.body
+
+    return render_template('edit_post.html', form=form)
+
 
 
 def get_posts_in_one_page(source):

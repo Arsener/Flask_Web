@@ -5,7 +5,6 @@ from .. import db
 from ..models import User
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm
 from ..email import send_email
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 @auth.before_app_request
 def before_request():
@@ -56,7 +55,7 @@ def register():
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
-@auth.route('/confirm/<id>/<token>')
+@auth.route('/confirm/<token>/<id>')
 def confirm(token, id):
     user = User.query.filter_by(id=id).first()
     if user.confirmed:
