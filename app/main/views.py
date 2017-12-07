@@ -55,7 +55,11 @@ def post(id):
 def write_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title = form.title.data, body=form.body.data.replace('\n', '<br />'),
+        title = form.title.data
+        if len(title) > 48:
+            flash('The length of the title must be less than 48 characters')
+            return render_template('write_post.html', form=form)
+        post = Post(title=title, body=form.body.data,
                     author=current_user._get_current_object())
         db.session.add(post)
         return redirect(url_for('.index'))
@@ -94,7 +98,7 @@ def edit_post(id):
 
 def get_posts_in_one_page(source):
     page = request.args.get('page', 1, type=int)
-    pagination = source.order_by(Post.id.desc()).paginate(
+    pagination = source.order_by(Post.timestamp.desc()).paginate(
         page, per_page=current_app.config['FLASKY_POSTS_PER_PAGE'], error_out=False)
     posts = pagination.items
     return posts, pagination

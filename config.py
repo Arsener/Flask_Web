@@ -11,7 +11,7 @@ class Config:
     MAIL_PORT = 465
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'minghui_gong@qq.com'
-    MAIL_PASSWORD = 'eaphookoapjmfbdd'
+    MAIL_PASSWORD = 'ocziknhrscckecae'
     FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
     FLASKY_MAIL_SENDER = 'minghui_gong@qq.com'
     FLASKY_POSTS_PER_PAGE = 10

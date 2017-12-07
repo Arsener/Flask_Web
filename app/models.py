@@ -4,6 +4,7 @@ from . import db, login_mamager
 from flask import current_app, request
 from flask_login import UserMixin
 from markdown import markdown
+from datetime import datetime
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -76,6 +77,7 @@ class Post(db.Model):
     title = db.Column(db.String(128))
     body = db.Column(db.Text)
     body_html = db.Column(db.Text)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     @staticmethod
