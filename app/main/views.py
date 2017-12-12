@@ -49,12 +49,18 @@ def post(id):
     post = Post.query.get_or_404(id)
     form = CommentForm()
     if form.validate_on_submit():
-        comment = Comment(body=form.body.data,
-                          post=post,
-                          author=current_user._get_current_object())
-        db.session.add(comment)
-        flash('Your comment has been published.')
-        return redirect(url_for('.post', id=post.id, page=-1))
+        try:
+            current_user._get_current_object()._sa_instance_state
+        except:
+            flash('You must login first.')
+            return redirect(url_for('auth.login'))
+        else:
+            comment = Comment(body=form.body.data,
+                              post=post,
+                              author=current_user._get_current_object())
+            db.session.add(comment)
+            flash('Your comment has been published.')
+            return redirect(url_for('.post', id=post.id, page=-1))
     page = request.args.get('page', 1, type=int)
     if page == -1:
         page = (post.comments.count() - 1) // \
