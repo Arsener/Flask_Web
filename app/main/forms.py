@@ -19,5 +19,5 @@ class EditProfileForm(FlaskForm):
 
 
 class CommentForm(FlaskForm):
-    body = StringField('', validators=[Required()])
+    body = TextAreaField('', validators=[Required()])
     submit = SubmitField('Submit')

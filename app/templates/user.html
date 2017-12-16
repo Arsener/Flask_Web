@@ -45,10 +45,10 @@
                     {% if user.name == current_user.name %}
                         <a href="{{ url_for('.delete_post', id=post.id) }}">Delete</a>
                         <a href="{{ url_for('.edit_post', id=post.id) }}">Edit</a>
-                        <a href="{{ url_for('.post', id=post.id) }}#comments">
-                            <span class="label label-primary">{{ post.comments.count() }} Comments</span>
-                        </a>
                     {% endif %}
+                    <a href="{{ url_for('.post', id=post.id) }}#comments">
+                        <span class="label label-primary">{{ post.comments.count() }} Comments</span>
+                    </a>
                 </span>
             </div>
 

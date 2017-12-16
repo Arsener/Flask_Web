@@ -1,6 +1,5 @@
 <ul class="comments">
     {% for comment in comments %}
-        <br />
         <div class="comment-thumbnail" style="float: left">
             <a href="{{ url_for('.user', name=comment.author.name) }}">
                 <img class="img-rounded profile-thumbnail" src="{{ comment.author.gravatar(size=40) }}">
