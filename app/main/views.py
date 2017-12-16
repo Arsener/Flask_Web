@@ -125,7 +125,7 @@ def edit_post(id):
 @login_required
 def delete_comment(id):
     comment = Comment.query.get_or_404(id)
-    post = Post.query.filter_by(id=Comment.post_id).first()
+    post = Post.query.filter_by(id=comment.post_id).first()
     db.session.delete(comment)
     flash('The comment has been deleted.')
     return redirect(url_for('.post', id=post.id))
