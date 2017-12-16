@@ -52,7 +52,7 @@ def register():
         send_email(user.email, 'Confirm Your Account',
                    'auth/email/confirm', user=user, token=token)
         flash('A confirmation email has been sent to you by email.')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('.login'))
     return render_template('auth/register.html', form=form)
 
 @auth.route('/confirm/<token>/<id>')
@@ -81,12 +81,14 @@ def resend_confirmation():
 def change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():
-        if current_user.verify_password(form.old_password.data):
+        if current_user.verify_password(form.old_password.data) and not current_user.verify_password(form.new_password.data):
             current_user.password = form.new_password.data
             db.session.add(current_user)
             logout_user()
             flash('Your password has been updated. You need login again.')
-            return redirect(url_for('auth.login'))
-        else:
-            flash('Invalid password')
+            return redirect(url_for('.login'))
+        elif not current_user.verify_password(form.old_password.data):
+            flash('Invalid password.')
+        elif current_user.verify_password(form.new_password.data):
+            flash('The new password must be different from the old one.')
     return render_template("auth/change_password.html", form=form)
